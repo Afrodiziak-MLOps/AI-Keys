@@ -1,61 +1,44 @@
-# 🧠 AI Lab & MLOps Portfolio
+# Владислав Кушнарев
+**MLOps / AI Infrastructure Engineer (Junior/Стажёр)**
 
-> Локальная ИИ-лаборатория и проекты по автоматизации для позиции Junior MLOps / AI Infrastructure Engineer.
-
-## 🖥️ Система
-- **ОС**: Windows 11 + WSL 2 (Ubuntu 24.04)
-- **CPU/GPU**: AMD Ryzen с интегрированной графикой Radeon Graphics (Vulkan)
-- **ОЗУ**: 16 ГБ
-
----
-
-## 📁 Проекты
-
-### 1. 🐳 AI Infrastructure (Docker Compose)
-**Папка:** [`ai-lab/`](ai-lab/)
-
-Полноценная контейнеризованная среда для запуска LLM:
-- `docker-compose.yml` — оркестрация Ollama + Open WebUI
-- Запуск одной командой: `docker compose up -d`
-- Поддержка GPU через Vulkan (локально)
-
-### 2. 🐍 AI Scripts (Python)
-**Папка:** [`ai-scripts/`](ai-scripts/)
-
-| Файл | Описание |
-|------|----------|
-| `telegram_bot.py` | Telegram-бот с историей, сменой модели, inline-кнопками и логированием |
-| `rag_bot.py` | RAG-пайплайн на LangChain + ChromaDB для ответов по локальным документам |
-| `ru_to_py.py` | Интерактивный переводчик с русского языка на Python-код |
-| `test_ollama.py` | Базовый пример запроса к Ollama API |
-| `learn_01.py` … `learn_04.py` | Учебные скрипты по основам Python |
-| `knowledge.txt` | Тестовая база знаний для RAG |
-| `bot_log.txt` | Логи диалогов Telegram-бота |
+📞 [+79186711350]
+✉️ [4193887mama@gmail.com]
+📱 Telegram: @Afrod1z1ak
+💻 GitHub: https://github.com/Afrodiziak-MLOps/AI-Keys
 
 ---
 
-## 🛠️ Технологический стек
-- **LLM**: Ollama (llama3.2:3b, tinyllama) с ускорением Vulkan
-- **Контейнеризация**: Docker, Docker Compose
-- **RAG**: LangChain, ChromaDB, OllamaEmbeddings
-- **Боты**: Telegram Bot API, python-telegram-bot
-- **ОС и виртуализация**: Windows 11, WSL 2, Ubuntu 24.04
+## О себе
 
----
+Начинающий MLOps-инженер. Пришел в IT из гуманитарной сферы, предпочитаю учиться через практику и "работу руками". Самостоятельно освоил Python, Docker и WSL2 на Windows 10. Собрал локальную AI-лабораторию: запустил LLM-модели через Ollama с GPU-ускорением на AMD (Vulkan), развернул веб-интерфейс в Docker. Разработал Telegram-бота и RAG-систему для поиска по документам. Ищу позицию стажера, чтобы применить свои навыки в реальных бизнес-задачах.
 
-## 🔧 Полезные команды
 
-| Действие | Команда |
-|----------|---------|
-| Запуск Docker-стека | `cd ai-lab && docker compose up -d` |
-| Остановка Docker-стека | `cd ai-lab && docker compose down` |
-| Запуск Telegram-бота | `cd ai-scripts && py telegram_bot.py` |
-| Запуск локальной Ollama | `$env:OLLAMA_VULKAN=1; ollama serve` |
+## Технические навыки
 
----
+**Языки:** Python 3, Bash, PowerShell  
+**Инфраструктура:** Docker, Docker Compose, WSL2, Ubuntu, Git/GitHub  
+**ОС:** Windows 10 (продвинутый пользователь), Linux (Ubuntu)  
+**ML/LLM:** Ollama (GPU-ускорение через Vulkan), LangChain, ChromaDB  
+**Библиотеки:** python-telegram-bot, requests, asyncio, pydantic  
+**Сети:** REST API, HTTP/HTTPS, базовое понимание прокси (Socks5)  
 
-## 🎯 Цель
-Получить позицию **Junior MLOps-инженера** или **AI Infrastructure Engineer**.  
-Открыт к стажировкам и удалённой работе.
 
-📫 **Контакты**: [Telegram](https://t.me/Afrod1z1ak) | [GitHub](https://github.com/Afrodiziak-MLOps)
+## Проекты
+
+### Telegram AI Bot — Интеллектуальный ассистент с долговременной памятью
+*Разработал асинхронного Telegram-бота на Python для взаимодействия с локальной LLM.*
+*   **Стек:** Python, Ollama API, python-telegram-bot, Asyncio.
+*   **Ключевые функции:** Реализовал сохранение истории диалога, переключение моделей "на лету", интерактивные кнопки и автоматические повторные запросы для обеспечения отказоустойчивости при сетевых ошибках (503).
+*   **Результат:** Создал отказоустойчивый сервис, демонстрирующий навыки работы с API, асинхронного программирования и построения диалоговых систем.
+
+### RAG-система для ответов по документам
+*Разработал Retrieval-Augmented Generation (RAG) пайплайн для точных ответов на вопросы по пользовательским текстовым файлам.*
+*   **Стек:** Python, LangChain, ChromaDB, Ollama (эмбеддинги и генерация).
+*   **Ключевые функции:** Реализовал полный цикл обработки: загрузка документа, разбивка на чанки, создание эмбеддингов, индексация в векторной базе данных и генерация ответа с контекстом.
+*   **Результат:** Создал прототип системы для вопросно-ответного поиска по корпоративным базам знаний.
+
+### AI-Lab — Контейнеризованная среда для экспериментов с LLM
+*Спроектировал и развернул локальную инфраструктуру для запуска LLM на Windows 10 с использованием WSL2.*
+*   **Стек:** Docker, Docker Compose, Ollama, Open WebUI.
+*   **Ключевые функции:** Контейнеризировал LLM-движок и веб-интерфейс, настроил их взаимодействие, автоматизировал развертывание с помощью `docker-compose`.
+*   **Результат:** Создал готовую среду для экспериментов с ИИ, которая разворачивается одной командой, демонстрируя навыки работы с инфраструктурой как кодом (IaC).
