@@ -38,6 +38,6 @@ jobs:
           sleep 5
 
       - name: Run model deployer script
-        working-directory: ai-scripts
+    
         run: |
           python model_deployer.py
