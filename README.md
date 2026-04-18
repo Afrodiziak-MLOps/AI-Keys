@@ -1,3 +1,4 @@
+# AI Lab (Локальная ИИ-лаборатория)
 # Владислав Кушнарев
 **MLOps / AI Infrastructure Engineer (Junior/Стажёр)**
 
