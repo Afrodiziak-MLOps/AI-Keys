@@ -5,7 +5,7 @@ import ollama
 from datetime import datetime
 
 # --- НАСТРОЙКИ ---
-TOKEN = "8635674583:AAGstQqoxW4u6vl_XSJLgbkB2zsgY953O_0"  # ← ВСТАВЬТЕ СВОЙ ТОКЕН СЮДА
+TOKEN = "8635674583:AAGstQqoxW4u6vl_XSJLgbkB2zsgY953O_0"  # ← ЗАМЕНИТЕ
 DEFAULT_MODEL = "llama3.2:3b"
 MAX_HISTORY = 10
 LOG_FILE = "bot_log.txt"
@@ -58,6 +58,10 @@ def get_buttons():
         [
             InlineKeyboardButton("🔄 Перегенерировать", callback_data="regenerate"),
             InlineKeyboardButton("🗑️ Удалить", callback_data="delete"),
+        ],
+        [
+            InlineKeyboardButton("👍", callback_data="rate_good"),
+            InlineKeyboardButton("👎", callback_data="rate_bad"),
         ]
     ]
     return InlineKeyboardMarkup(keyboard)
@@ -89,8 +93,7 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/start — приветствие\n"
         "/help — это сообщение\n"
         "/model <имя> — сменить модель\n"
-        "/reset — сбросить историю диалога\n\n"
-        "Пример смены модели: /model tinyllama"
+        "/reset — сбросить историю"
     )
 
 async def set_model(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -151,11 +154,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     history.append({"role": "user", "content": user_message})
 
     try:
-        response = ollama.chat(
-            model=model,
-            messages=history,
-            options={"num_predict": 1024, "timeout": 120}
-        )
+        response = ollama.chat(model=model, messages=history, options={"num_predict": 1024, "timeout": 120})
         reply = response["message"]["content"]
         log_message(user_info, "BOT", reply[:100] + "..." if len(reply) > 100 else reply)
     except Exception as e:
@@ -187,6 +186,16 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         log_message(user_info, "BUTTON", "Удалить сообщение")
         return
 
+    if query.data == "rate_good":
+        await query.answer("Спасибо за оценку! 👍")
+        log_message(user_info, "RATING", "👍")
+        return
+
+    if query.data == "rate_bad":
+        await query.answer("Жаль, что ответ не понравился 😔")
+        log_message(user_info, "RATING", "👎")
+        return
+
     if query.data == "regenerate":
         log_message(user_info, "BUTTON", "Перегенерировать")
         if user_id not in last_interaction:
@@ -205,11 +214,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             history.pop()
 
         try:
-            response = ollama.chat(
-                model=model,
-                messages=history,
-                options={"num_predict": 1024, "timeout": 120}
-            )
+            response = ollama.chat(model=model, messages=history, options={"num_predict": 1024, "timeout": 120})
             new_reply = response["message"]["content"]
         except Exception as e:
             new_reply = f"❌ Ошибка: {e}"
@@ -220,7 +225,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(new_reply, reply_markup=get_buttons())
 
 def main():
-    print(f"🤖 Бот запущен с кнопками и длинными ответами. Логи: {LOG_FILE}")
+    print(f"🤖 Бот запущен с кнопками оценки. Логи: {LOG_FILE}")
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_cmd))
