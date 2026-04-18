@@ -1,3 +1,5 @@
+[![CI/CD Pipeline](https://github.com/Afrodiziak-MLOps/AI-Keys/actions/workflows/test_model.yml/badge.svg)](https://github.com/Afrodiziak-MLOps/AI-Keys/actions/workflows/test_model.yml)
+
 # AI Lab (Локальная ИИ-лаборатория)
 # Владислав Кушнарев
 **MLOps / AI Infrastructure Engineer (Junior/Стажёр)**
