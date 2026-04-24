@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegram-bot
+  labels:
+    app: telegram-bot
+spec:
+  replicas: 2  # Две копии для отказоустойчивости
+  selector:
+    matchLabels:
+      app: telegram-bot
+  template:
+    metadata:
+      labels:
+        app: telegram-bot
+    spec:
+      containers:
+      - name: bot
+        image: my-telegram-bot:latest  # Образ, который мы соберём
+        imagePullPolicy: Never  # Чтобы Kubernetes искал образ локально
+        env:
+        - name: TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: bot-secret
+              key: TOKEN
+        - name: GIGACHAT_KEY
+          valueFrom:
+            secretKeyRef:
+              name: bot-secret
+              key: GIGACHAT_KEY
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"

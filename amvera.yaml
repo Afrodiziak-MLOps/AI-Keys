@@ -1,0 +1,3 @@
+meta:
+  runtime: python311
+  entrypoint: python main.py
