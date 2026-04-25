@@ -1,47 +1,107 @@
+# 🧠 AI Lab & MLOps Portfolio — Владислав
+
+> **Полный цикл MLOps: от локальной модели до production-мониторинга в Kubernetes.**
+
 [![CI/CD Pipeline](https://github.com/Afrodiziak-MLOps/AI-Keys/actions/workflows/test_model.yml/badge.svg)](https://github.com/Afrodiziak-MLOps/AI-Keys/actions/workflows/test_model.yml)
-
-# AI Lab (Локальная ИИ-лаборатория)
-# Владислав Кушнарев
-**MLOps / AI Infrastructure Engineer (Junior/Стажёр)**
-
-📞 [+79186711350]
-✉️ [4193887mama@gmail.com]
-📱 Telegram: @Afrod1z1ak
-💻 GitHub: https://github.com/Afrodiziak-MLOps/AI-Keys
 
 ---
 
-## О себе
+## 🖥️ Система и стек
 
-Начинающий MLOps-инженер. Пришел в IT из гуманитарной сферы, предпочитаю учиться через практику и "работу руками". Самостоятельно освоил Python, Docker и WSL2 на Windows 10. Собрал локальную AI-лабораторию: запустил LLM-модели через Ollama с GPU-ускорением на AMD (Vulkan), развернул веб-интерфейс в Docker. Разработал Telegram-бота и RAG-систему для поиска по документам. Ищу позицию стажера, чтобы применить свои навыки в реальных бизнес-задачах.
+**Локально:**
+- **ОС:** Windows 10 + WSL 2 (Ubuntu 24.04)
+- **GPU:** AMD Radeon Graphics (ускорение через Vulkan)
+- **Контейнеризация:** Docker, Docker Compose, Kubernetes (minikube)
+- **ML-движок:** Ollama (`llama3.2:3b`, `tinyllama`)
 
+**Облако:**
+- **Платформа:** Amvera Cloud (24/7)
+- **LLM API:** GigaChat (Сбер)
+- **CI/CD:** GitHub Actions
+- **Мониторинг:** Prometheus + Grafana (в Kubernetes)
 
-## Технические навыки
+---
+
+## 📂 Проекты
+
+### 🤖 Telegram AI Bot — @Afrod1z1ak_bot (живой продукт)
+
+**Статус:** 🟢 Работает 24/7 в облаке Amvera и в Kubernetes.
+
+Полноценный ИИ-ассистент с интеграцией **GigaChat API** и production-мониторингом.
+- **История диалога** (до 10 сообщений) с изоляцией по пользователям.
+- **Интерактивные кнопки:** 🔄 Перегенерировать, 🗑️ Удалить, 👍/👎 Оценить.
+- **Отказоустойчивость:** автоматические повторы при сетевых ошибках (503).
+- **Логирование:** все диалоги и оценки сохраняются в `/data/bot_log.txt`.
+- **Безопасность:** токены и ключи API вынесены в секреты Kubernetes/Amvera.
+- **Мониторинг:** Prometheus собирает метрики, Grafana визуализирует их в реальном времени.
+
+**Ключевые метрики:**
+- `bot_messages_received_total` — количество обработанных сообщений
+- `bot_errors_total` — количество ошибок
+- `bot_commands_total` — статистика по командам (`/start`, `/help`)
+
+**Код:** [`main.py`](main.py) | [`bot-deployment.yaml`](bot-deployment.yaml)
+
+---
+
+### 📊 Мониторинг (Prometheus + Grafana)
+
+**Статус:** 🟢 Развёрнут в Kubernetes.
+
+Полноценный стек мониторинга для отслеживания состояния бота и инфраструктуры.
+- **Prometheus** — сбор метрик с бота и подов (`:8000/metrics`).
+- **Grafana** — дашборды с графиками в реальном времени.
+- **Автоматическое обнаружение сервисов** через `telegram-bot-service`.
+
+**Манифесты:** [`monitoring.yaml`](monitoring.yaml) | [`bot-service.yaml`](bot-service.yaml)
+
+---
+
+### 🐳 AI Infrastructure (Kubernetes + Docker)
+
+**Статус:** Готов к локальному развертыванию.
+
+- **Docker Compose:** `ollama` + `open-webui` для экспериментов с локальными LLM.
+- **Kubernetes:** `Deployment`, `Service`, `Secret`, `ConfigMap` для оркестрации бота и мониторинга.
+- **Запуск:** `docker compose up -d` или `kubectl apply -f .`
+
+**Код:** [`ai-lab/`](ai-lab/) | [`bot-deployment.yaml`](bot-deployment.yaml) | [`monitoring.yaml`](monitoring.yaml)
+
+---
+
+### 🐍 AI Scripts (Python-автоматизация)
+
+Коллекция скриптов для работы с LLM и автоматизации MLOps-задач.
+
+| Файл | Описание |
+| :--- | :--- |
+| `model_deployer.py` | **CI/CD-скрипт.** Проверяет наличие модели, при необходимости скачивает и тестирует её. Интегрирован в GitHub Actions. |
+| `rag_bot.py` | **RAG-пайплайн.** Ответы на вопросы по локальным документам (LangChain + ChromaDB + Ollama). |
+| `ru_to_py.py` | **Переводчик.** Конвертирует задачи с русского языка в Python-код с помощью LLM. |
+| `learn_01.py … learn_04.py` | **Учебные скрипты.** Переменные, циклы, условия, функции, работа с файлами. |
+
+---
+
+## 🛠️ Ключевые навыки
 
 **Языки:** Python 3, Bash, PowerShell  
-**Инфраструктура:** Docker, Docker Compose, WSL2, Ubuntu, Git/GitHub  
-**ОС:** Windows 10 (продвинутый пользователь), Linux (Ubuntu)  
-**ML/LLM:** Ollama (GPU-ускорение через Vulkan), LangChain, ChromaDB  
-**Библиотеки:** python-telegram-bot, requests, asyncio, pydantic  
-**Сети:** REST API, HTTP/HTTPS, базовое понимание прокси (Socks5)  
+**Инфраструктура:** Docker, Docker Compose, Kubernetes (minikube), WSL2, Linux (Ubuntu), Git/GitHub  
+**ML/LLM:** Ollama (Vulkan), GigaChat API, LangChain, ChromaDB, Prompt Engineering  
+**CI/CD & Деплой:** GitHub Actions, Amvera Cloud, Kubernetes (Deployment, Service, Secret)  
+**Мониторинг:** Prometheus, Grafana, экспорт метрик из Python (prometheus-client)  
+**Сети и безопасность:** REST API, HTTP/HTTPS, работа с секретами и переменными окружения
 
+---
 
-## Проекты
+## 🎯 Цель
 
-### Telegram AI Bot — Интеллектуальный ассистент с долговременной памятью
-*Разработал асинхронного Telegram-бота на Python для взаимодействия с локальной LLM.*
-*   **Стек:** Python, Ollama API, python-telegram-bot, Asyncio.
-*   **Ключевые функции:** Реализовал сохранение истории диалога, переключение моделей "на лету", интерактивные кнопки и автоматические повторные запросы для обеспечения отказоустойчивости при сетевых ошибках (503).
-*   **Результат:** Создал отказоустойчивый сервис, демонстрирующий навыки работы с API, асинхронного программирования и построения диалоговых систем.
+Ищу позицию **Junior MLOps-инженера**, **Python-разработчика (AI)** или **AI Infrastructure Engineer**.  
+Открыт к стажировкам, удалённой работе и интересным проектам.
 
-### RAG-система для ответов по документам
-*Разработал Retrieval-Augmented Generation (RAG) пайплайн для точных ответов на вопросы по пользовательским текстовым файлам.*
-*   **Стек:** Python, LangChain, ChromaDB, Ollama (эмбеддинги и генерация).
-*   **Ключевые функции:** Реализовал полный цикл обработки: загрузка документа, разбивка на чанки, создание эмбеддингов, индексация в векторной базе данных и генерация ответа с контекстом.
-*   **Результат:** Создал прототип системы для вопросно-ответного поиска по корпоративным базам знаний.
+📫 **Контакты:**  
+- Telegram: [@Afrod1z1ak](https://t.me/Afrod1z1ak)  
+- GitHub: [Afrodiziak-MLOps](https://github.com/Afrodiziak-MLOps)
 
-### AI-Lab — Контейнеризованная среда для экспериментов с LLM
-*Спроектировал и развернул локальную инфраструктуру для запуска LLM на Windows 10 с использованием WSL2.*
-*   **Стек:** Docker, Docker Compose, Ollama, Open WebUI.
-*   **Ключевые функции:** Контейнеризировал LLM-движок и веб-интерфейс, настроил их взаимодействие, автоматизировал развертывание с помощью `docker-compose`.
-*   **Результат:** Создал готовую среду для экспериментов с ИИ, которая разворачивается одной командой, демонстрируя навыки работы с инфраструктурой как кодом (IaC).
+---
+*Это портфолио — результат интенсивной практики и осознанного перехода в IT из гуманитарной сферы.*
