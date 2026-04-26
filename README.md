@@ -1,6 +1,6 @@
 # 🧠 AI Lab & MLOps Portfolio — Владислав
 
-> **Полный цикл MLOps: от локальной модели до production-мониторинга в Kubernetes.**
+> **Полный цикл MLOps: от локальной модели до production-мониторинга и автомасштабирования в Kubernetes.**
 
 [![CI/CD Pipeline](https://github.com/Afrodiziak-MLOps/AI-Keys/actions/workflows/test_model.yml/badge.svg)](https://github.com/Afrodiziak-MLOps/AI-Keys/actions/workflows/test_model.yml)
 
@@ -18,7 +18,7 @@
 - **Платформа:** Amvera Cloud (24/7)
 - **LLM API:** GigaChat (Сбер)
 - **CI/CD:** GitHub Actions
-- **Мониторинг:** Prometheus + Grafana (в Kubernetes)
+- **Мониторинг:** Prometheus + Grafana с дашбордами и алертами
 
 ---
 
@@ -28,13 +28,14 @@
 
 **Статус:** 🟢 Работает 24/7 в облаке Amvera и в Kubernetes.
 
-Полноценный ИИ-ассистент с интеграцией **GigaChat API** и production-мониторингом.
+Полноценный ИИ-ассистент с интеграцией **GigaChat API** и production-инфраструктурой.
 - **История диалога** (до 10 сообщений) с изоляцией по пользователям.
 - **Интерактивные кнопки:** 🔄 Перегенерировать, 🗑️ Удалить, 👍/👎 Оценить.
 - **Отказоустойчивость:** автоматические повторы при сетевых ошибках (503).
 - **Логирование:** все диалоги и оценки сохраняются в `/data/bot_log.txt`.
 - **Безопасность:** токены и ключи API вынесены в секреты Kubernetes/Amvera.
-- **Мониторинг:** Prometheus собирает метрики, Grafana визуализирует их в реальном времени.
+- **Автомасштабирование (HPA):** Kubernetes автоматически увеличивает/уменьшает количество реплик бота при нагрузке.
+- **Мониторинг и алерты:** Prometheus собирает метрики, Grafana визуализирует их, Webhook отправляет уведомления в Telegram при падении бота.
 
 **Ключевые метрики:**
 - `bot_messages_received_total` — количество обработанных сообщений
@@ -45,16 +46,17 @@
 
 ---
 
-### 📊 Мониторинг (Prometheus + Grafana)
+### 📊 Мониторинг и Observability
 
-**Статус:** 🟢 Развёрнут в Kubernetes.
+**Статус:** 🟢 Prometheus + Grafana + Webhook-алерты.
 
-Полноценный стек мониторинга для отслеживания состояния бота и инфраструктуры.
-- **Prometheus** — сбор метрик с бота и подов (`:8000/metrics`).
+Полноценный стек observability для отслеживания состояния бота и инфраструктуры.
+- **Prometheus** — сбор метрик с бота и подов.
 - **Grafana** — дашборды с графиками в реальном времени.
+- **Webhook-алерты** — уведомления в Telegram при падении бота.
 - **Автоматическое обнаружение сервисов** через `telegram-bot-service`.
 
-**Манифесты:** [`monitoring.yaml`](monitoring.yaml) | [`bot-service.yaml`](bot-service.yaml)
+**Манифесты:** [`monitoring.yaml`](monitoring.yaml) | [`bot-service.yaml`](bot-service.yaml) | [`webhook-deployment.yaml`](webhook-deployment.yaml)
 
 ---
 
@@ -63,7 +65,7 @@
 **Статус:** Готов к локальному развертыванию.
 
 - **Docker Compose:** `ollama` + `open-webui` для экспериментов с локальными LLM.
-- **Kubernetes:** `Deployment`, `Service`, `Secret`, `ConfigMap` для оркестрации бота и мониторинга.
+- **Kubernetes:** `Deployment`, `Service`, `Secret`, `ConfigMap`, `HPA` для оркестрации бота и мониторинга.
 - **Запуск:** `docker compose up -d` или `kubectl apply -f .`
 
 **Код:** [`ai-lab/`](ai-lab/) | [`bot-deployment.yaml`](bot-deployment.yaml) | [`monitoring.yaml`](monitoring.yaml)
@@ -88,8 +90,8 @@
 **Языки:** Python 3, Bash, PowerShell  
 **Инфраструктура:** Docker, Docker Compose, Kubernetes (minikube), WSL2, Linux (Ubuntu), Git/GitHub  
 **ML/LLM:** Ollama (Vulkan), GigaChat API, LangChain, ChromaDB, Prompt Engineering  
-**CI/CD & Деплой:** GitHub Actions, Amvera Cloud, Kubernetes (Deployment, Service, Secret)  
-**Мониторинг:** Prometheus, Grafana, экспорт метрик из Python (prometheus-client)  
+**CI/CD & Деплой:** GitHub Actions, Amvera Cloud, Kubernetes (Deployment, Service, Secret, HPA)  
+**Мониторинг:** Prometheus, Grafana, Webhook-алерты, экспорт метрик из Python (prometheus-client)  
 **Сети и безопасность:** REST API, HTTP/HTTPS, работа с секретами и переменными окружения
 
 ---
@@ -104,4 +106,3 @@
 - GitHub: [Afrodiziak-MLOps](https://github.com/Afrodiziak-MLOps)
 
 ---
-*Это портфолио — результат интенсивной практики и осознанного перехода в IT из гуманитарной сферы.*
