@@ -4,6 +4,7 @@ from datetime import datetime
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
 from gigachat import GigaChat
+from prometheus_client import start_http_server, Counter
 
 # --- НАСТРОЙКИ ---
 TOKEN = os.environ.get("TOKEN", "8635674583:AAGstQqoxW4u6vl_XSJLgbkB2zsgY953O_0")
@@ -17,6 +18,11 @@ MAX_MESSAGE_LENGTH = 4096
 
 user_data = {}
 last_interaction = {}
+
+# --- Метрики ---
+MESSAGES_RECEIVED = Counter('bot_messages_received', 'Total messages received')
+ERRORS_TOTAL = Counter('bot_errors_total', 'Total errors')
+COMMANDS_TOTAL = Counter('bot_commands_total', 'Total commands', ['command'])
 
 # --- Вспомогательные функции ---
 def log_message(user_info: str, message_type: str, content: str):
@@ -74,6 +80,7 @@ def get_buttons():
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message is None:
         return
+    COMMANDS_TOTAL.labels(command='start').inc()
     user = update.effective_user
     user_info = f"{user.full_name} (@{user.username}) [{user.id}]"
     log_message(user_info, "COMMAND", "/start")
@@ -87,6 +94,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message is None:
         return
+    COMMANDS_TOTAL.labels(command='help').inc()
     user = update.effective_user
     user_info = f"{user.full_name} (@{user.username}) [{user.id}]"
     log_message(user_info, "COMMAND", "/help")
@@ -118,6 +126,7 @@ async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message is None or update.message.text is None:
         return
+    MESSAGES_RECEIVED.inc()
     user_id = update.effective_user.id
     user = update.effective_user
     user_info = f"{user.full_name} (@{user.username}) [{user.id}]"
@@ -137,6 +146,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply = response.choices[0].message.content
         log_message(user_info, "BOT", reply[:100] + "..." if len(reply) > 100 else reply)
     except Exception as e:
+        ERRORS_TOTAL.inc()
         reply = f"❌ Ошибка GigaChat: {e}"
         log_message(user_info, "ERROR", str(e))
         history.pop()
@@ -195,6 +205,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             response = client.chat({"messages": history})
             new_reply = response.choices[0].message.content
         except Exception as e:
+            ERRORS_TOTAL.inc()
             new_reply = f"❌ Ошибка GigaChat: {e}"
         else:
             history.append({"role": "assistant", "content": new_reply})
@@ -203,7 +214,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(new_reply, reply_markup=get_buttons())
 
 def main():
-    print(f"🤖 Бот запущен на GigaChat. Логи: {LOG_FILE}")
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_cmd))
@@ -211,6 +221,8 @@ def main():
     app.add_handler(CommandHandler("reset", reset))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     app.add_handler(CallbackQueryHandler(button_handler))
+    start_http_server(8000)
+    print(f"🤖 Бот запущен на GigaChat. Метрики: :8000")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 if __name__ == "__main__":
