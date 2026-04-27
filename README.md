@@ -1,6 +1,6 @@
 # 🧠 AI Lab & MLOps Portfolio — Владислав
 
-> **Полный цикл MLOps: от локальной модели до production-мониторинга и автомасштабирования в Kubernetes.**
+> **Полный цикл MLOps: от локальной модели до production-мониторинга, автомасштабирования и трекинга экспериментов.**
 
 [![CI/CD Pipeline](https://github.com/Afrodiziak-MLOps/AI-Keys/actions/workflows/test_model.yml/badge.svg)](https://github.com/Afrodiziak-MLOps/AI-Keys/actions/workflows/test_model.yml)
 
@@ -19,6 +19,7 @@
 - **LLM API:** GigaChat (Сбер)
 - **CI/CD:** GitHub Actions
 - **Мониторинг:** Prometheus + Grafana с дашбордами и алертами
+- **Трекинг экспериментов:** MLflow (в Docker)
 
 ---
 
@@ -26,21 +27,19 @@
 
 ### 🤖 Telegram AI Bot — @Afrod1z1ak_bot (живой продукт)
 
-**Статус:** 🟢 Работает 24/7 в облаке Amvera и в Kubernetes.
+**Статус:** 🟢 Работает 24/7 в облаке Amvera.
 
-Полноценный ИИ-ассистент с интеграцией **GigaChat API** и production-инфраструктурой.
-- **История диалога** (до 10 сообщений) с изоляцией по пользователям.
+Полноценный ИИ-ассистент с интеграцией **GigaChat API** и RAG-функционалом.
+- **Чат с историей** (до 10 сообщений) с изоляцией по пользователям.
+- **RAG:** загрузка PDF, DOCX, TXT файлов и ответы на вопросы по их содержимому (`/ask`).
 - **Интерактивные кнопки:** 🔄 Перегенерировать, 🗑️ Удалить, 👍/👎 Оценить.
-- **Отказоустойчивость:** автоматические повторы при сетевых ошибках (503).
-- **Логирование:** все диалоги и оценки сохраняются в `/data/bot_log.txt`.
-- **Безопасность:** токены и ключи API вынесены в секреты Kubernetes/Amvera.
 - **Автомасштабирование (HPA):** Kubernetes автоматически увеличивает/уменьшает количество реплик бота при нагрузке.
 - **Мониторинг и алерты:** Prometheus собирает метрики, Grafana визуализирует их, Webhook отправляет уведомления в Telegram при падении бота.
 
 **Ключевые метрики:**
 - `bot_messages_received_total` — количество обработанных сообщений
 - `bot_errors_total` — количество ошибок
-- `bot_commands_total` — статистика по командам (`/start`, `/help`)
+- `bot_commands_total` — статистика по командам
 
 **Код:** [`main.py`](main.py) | [`bot-deployment.yaml`](bot-deployment.yaml)
 
@@ -50,13 +49,24 @@
 
 **Статус:** 🟢 Prometheus + Grafana + Webhook-алерты.
 
-Полноценный стек observability для отслеживания состояния бота и инфраструктуры.
 - **Prometheus** — сбор метрик с бота и подов.
 - **Grafana** — дашборды с графиками в реальном времени.
 - **Webhook-алерты** — уведомления в Telegram при падении бота.
-- **Автоматическое обнаружение сервисов** через `telegram-bot-service`.
+- **HPA** — горизонтальное автомасштабирование подов бота по CPU.
 
 **Манифесты:** [`monitoring.yaml`](monitoring.yaml) | [`bot-service.yaml`](bot-service.yaml) | [`webhook-deployment.yaml`](webhook-deployment.yaml)
+
+---
+
+### 🧪 Трекинг экспериментов (MLflow)
+
+**Статус:** 🟢 Развёрнут в Docker.
+
+- **Отслеживание гиперпараметров** и метрик при обучении моделей.
+- **Визуализация** результатов экспериментов.
+- **Готов к интеграции** с CI/CD пайплайнами.
+
+**Код:** [`docker-compose.yml`](docker-compose.yml) | [`train_example.py`](train_example.py)
 
 ---
 
@@ -64,7 +74,7 @@
 
 **Статус:** Готов к локальному развертыванию.
 
-- **Docker Compose:** `ollama` + `open-webui` для экспериментов с локальными LLM.
+- **Docker Compose:** `ollama` + `open-webui` + `mlflow` для экспериментов.
 - **Kubernetes:** `Deployment`, `Service`, `Secret`, `ConfigMap`, `HPA` для оркестрации бота и мониторинга.
 - **Запуск:** `docker compose up -d` или `kubectl apply -f .`
 
@@ -74,13 +84,12 @@
 
 ### 🐍 AI Scripts (Python-автоматизация)
 
-Коллекция скриптов для работы с LLM и автоматизации MLOps-задач.
-
 | Файл | Описание |
 | :--- | :--- |
-| `model_deployer.py` | **CI/CD-скрипт.** Проверяет наличие модели, при необходимости скачивает и тестирует её. Интегрирован в GitHub Actions. |
+| `model_deployer.py` | **CI/CD-скрипт.** Проверяет наличие модели, скачивает и тестирует её. |
 | `rag_bot.py` | **RAG-пайплайн.** Ответы на вопросы по локальным документам (LangChain + ChromaDB + Ollama). |
 | `ru_to_py.py` | **Переводчик.** Конвертирует задачи с русского языка в Python-код с помощью LLM. |
+| `train_example.py` | **Трекинг экспериментов.** Логирует гиперпараметры и метрики в MLflow. |
 | `learn_01.py … learn_04.py` | **Учебные скрипты.** Переменные, циклы, условия, функции, работа с файлами. |
 
 ---
@@ -90,7 +99,7 @@
 **Языки:** Python 3, Bash, PowerShell  
 **Инфраструктура:** Docker, Docker Compose, Kubernetes (minikube), WSL2, Linux (Ubuntu), Git/GitHub  
 **ML/LLM:** Ollama (Vulkan), GigaChat API, LangChain, ChromaDB, Prompt Engineering  
-**CI/CD & Деплой:** GitHub Actions, Amvera Cloud, Kubernetes (Deployment, Service, Secret, HPA)  
+**MLOps:** MLflow, CI/CD (GitHub Actions), HPA (автомасштабирование), IaC  
 **Мониторинг:** Prometheus, Grafana, Webhook-алерты, экспорт метрик из Python (prometheus-client)  
 **Сети и безопасность:** REST API, HTTP/HTTPS, работа с секретами и переменными окружения
 
@@ -105,4 +114,4 @@
 - Telegram: [@Afrod1z1ak](https://t.me/Afrod1z1ak)  
 - GitHub: [Afrodiziak-MLOps](https://github.com/Afrodiziak-MLOps)
 
----
+ 
