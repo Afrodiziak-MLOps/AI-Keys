@@ -1,3 +1,14 @@
 meta:
-  runtime: python311
-  entrypoint: python main.py
+  environment: python
+  toolchain:
+    name: pip
+    version: "3.11"
+build:
+  requirementsPath: requirements.txt
+  useCache: true
+run:
+  scriptName: main.py
+  command: null
+  persistenceMount: /data
+  containerPort: "80"
+  servicePort: "80"
